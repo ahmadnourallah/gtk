@@ -181,30 +181,35 @@ entry_key_press (GtkEntry           *entry,
                  GdkEventKey        *event,
                  GtkEmojiCompletion *completion)
 {
+  guint keyval;
+
   if (!gtk_widget_get_visible (GTK_WIDGET (completion)))
     return FALSE;
 
-  if (event->keyval == GDK_KEY_Escape)
+  if (!gdk_event_get_keyval ((GdkEvent*)event, &keyval))
+    return FALSE;
+
+  if (keyval == GDK_KEY_Escape)
     {
       gtk_popover_popdown (GTK_POPOVER (completion));
       return TRUE;
     }
 
-  if (event->keyval == GDK_KEY_Up)
+  if (keyval == GDK_KEY_Up)
     {
       move_active_row (completion, -1);
       return TRUE;
     }
 
-  if (event->keyval == GDK_KEY_Down)
+  if (keyval == GDK_KEY_Down)
     {
       move_active_row (completion, 1);
       return TRUE;
     }
 
-  if (event->keyval == GDK_KEY_Return ||
-      event->keyval == GDK_KEY_KP_Enter ||
-      event->keyval == GDK_KEY_ISO_Enter)
+  if (keyval == GDK_KEY_Return ||
+      keyval == GDK_KEY_KP_Enter ||
+      keyval == GDK_KEY_ISO_Enter)
     {
       activate_active_row (completion);
       return TRUE;
